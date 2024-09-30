@@ -1,0 +1,21 @@
+.canvasContainer {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: light-dark(
+    var(--mantine-color-gray-1),
+    var(--mantine-color-dark-6)
+  );
+}
+
+.canvas {
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  background-color: light-dark(
+    var(--mantine-color-white),
+    var(--mantine-color-dark-2)
+  );
+  height: 95%;
+  width: 95%;
+}

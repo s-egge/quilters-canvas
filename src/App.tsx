@@ -1,42 +1,39 @@
 import '@mantine/core/styles.css'
-import { MantineProvider, createTheme } from '@mantine/core'
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { MantineProvider, createTheme, MantineColorsTuple } from '@mantine/core'
+import Toolbar from './components/toolbar/Toolbar'
+import GridCanvas from './components/canvas/GridCanvas'
 import './App.css'
+
+const paleBlue: MantineColorsTuple = [
+  '#e7f8ff',
+  '#daebf5',
+  '#b8d3e2',
+  '#94bbd0',
+  '#75a6c1',
+  '#6099b8',
+  '#5492b4',
+  '#437e9f',
+  '#35718f',
+  '#216281',
+]
 
 const theme = createTheme({
   /** Mantine theme overrides go here
    * https://mantine.dev/theming/mantine-provider/
    * https://mantine.dev/theming/theme-object/
    */
+  autoContrast: true,
+  colors: {
+    paleBlue: paleBlue,
+  },
+  primaryColor: 'paleBlue',
 })
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <MantineProvider theme={theme}>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Toolbar />
+      <GridCanvas />
     </MantineProvider>
   )
 }
