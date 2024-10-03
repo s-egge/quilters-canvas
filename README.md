@@ -1,50 +1,42 @@
-# React + TypeScript + Vite
+# Quilt Design App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A work in progress web application for planning out a gridded quilt design before you cut into your fabric.
 
-Currently, two official plugins are available:
+This application will be updated over the next few months and will have a full base functionality by December 2024.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Base Features
 
-## Expanding the ESLint configuration
+### Grid
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- Choose from hexagon or square grid
+- Choose size of grid
+- Turn grid lines on/off
+- Change color of grid lines
 
-- Configure the top-level `parserOptions` property like this:
+### Toolbar
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- Draw - Fill shapes with images of fabric
+- Erase
+- Erase all
+- Save pattern - either locally or in browser
+- Load pattern - either locally or from browser
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### Palette
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+- Pick what shapes will be filled with when drawing - either a hex color or an image
+- Delete fills from previously saved/used fills
+- Edit images
+  - Zoom in/out on saved images so they more accurately reflect what it will look like on the finished quilt
+  - Example of what the same fabric might look like on two differently sized hexagons (e.g. 2" in diameter vs. 5" in diameter)
+  - ![alt text](image.png)
+- Upload image using a URL
+  - Verify it's an image
+- Upload image from computer
+- Choose a solid hex/rgb color
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+### Canvas
+
+- Click and draw/erase
+- Drag and draw/erase
+- Zoom in/out
+- Pan canvas
