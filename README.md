@@ -28,7 +28,7 @@ This application will be updated over the next few months and will have a full b
 - Edit images
   - Zoom in/out on saved images so they more accurately reflect what it will look like on the finished quilt
   - Example of what the same fabric might look like on two differently sized hexagons (e.g. 2" in diameter vs. 5" in diameter)
-  - ![alt text](image.png)
+  - ![image](https://github.com/user-attachments/assets/2a320646-f8f1-475d-874b-c04f2fa6299e)
 - Upload image using a URL
   - Verify it's an image
 - Upload image from computer
