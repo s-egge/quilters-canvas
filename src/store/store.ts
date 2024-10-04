@@ -1,8 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit'
+import toolbarReducer from './toolbarSlice'
 
 const store = configureStore({
   reducer: {
-    // add reducers here
+    toolbar: toolbarReducer,
   },
 })
 

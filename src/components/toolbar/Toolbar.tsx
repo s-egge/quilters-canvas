@@ -1,7 +1,9 @@
-/** Toolbar modified from Mantine's example:
+/** Toolbar UI modified from Mantine's example:
  *  https://ui.mantine.dev/component/navbar-minimal/
  */
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
+import { useAppSelector, useAppDispatch } from '../../store/hooks'
+import { setTool } from '../../store/toolbarSlice'
 import { Stack, Text, Tooltip, UnstyledButton, rem } from '@mantine/core'
 import {
   Icon,
@@ -43,27 +45,43 @@ function ToolbarLink({
 }
 
 const toolbarItems = [
-  { icon: IconPencil, label: 'Draw (d)', key: 'd' },
-  { icon: IconEraser, label: 'Erase (e)', key: 'e' },
-  { icon: IconPalette, label: 'Palette (p)', key: 'p' },
-  { icon: IconGrid4x4, label: 'Grid Settings (g)', key: 'g' },
-  { icon: IconDeviceFloppy, label: 'Save Pattern (s)', key: 's' },
-  { icon: IconUpload, label: 'Load Pattern (l)', key: 'l' },
-  { icon: IconTrash, label: 'Clear (c)', key: 'c' },
+  { icon: IconPencil, label: 'Draw (d)', id: 'draw', key: 'd' },
+  { icon: IconEraser, label: 'Erase (e)', id: 'erase', key: 'e' },
+  { icon: IconPalette, label: 'Palette (p)', id: 'palette', key: 'p' },
+  {
+    icon: IconGrid4x4,
+    label: 'Grid Settings (g)',
+    id: 'gridSettings',
+    key: 'g',
+  },
+  {
+    icon: IconDeviceFloppy,
+    label: 'Save Pattern (s)',
+    id: 'savePattern',
+    key: 's',
+  },
+  { icon: IconUpload, label: 'Load Pattern (l)', id: 'loadPattern', key: 'l' },
+  { icon: IconTrash, label: 'Clear (c)', id: 'clearAll', key: 'c' },
 ]
 
 export default function Toolbar() {
-  const [active, setActive] = useState(0)
+  const dispatch = useAppDispatch()
+  const toolbarState = useAppSelector((state) => state.toolbar)
 
   // keyboard shortcuts for toolbar buttons
   // TODO: add shortcut for help button when implemented
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
       const key = event.key.toLowerCase()
-      const index = toolbarItems.findIndex((item) => item.key === key)
-      if (index !== -1) setActive(index)
-      else if (key === 'h') {
-        console.log('TODO: implement help button')
+      const keyID = toolbarItems.find((item) => item.key === key)?.id
+
+      if (keyID) {
+        dispatch(setTool(keyID))
+      }
+
+      // help button is not in toolbarItems and needs to be accounted for separately
+      else if (key == 'h') {
+        dispatch(setTool('help'))
       }
     }
 
@@ -83,14 +101,19 @@ export default function Toolbar() {
             key={index}
             icon={item.icon}
             label={item.label}
-            active={index == active}
-            onClick={() => setActive(index)}
+            active={toolbarState[item.id as keyof typeof toolbarState]}
+            onClick={() => dispatch(setTool(item.id))}
           />
         ))}
       </Stack>
       <Stack justify="center" gap={0}>
         <ColorSchemeButton />
-        <ToolbarLink icon={IconQuestionMark} label="Help (h)" />
+        <ToolbarLink
+          icon={IconQuestionMark}
+          label="Help (h)"
+          active={toolbarState.help}
+          onClick={() => dispatch(setTool('help'))}
+        />
       </Stack>
     </div>
   )
