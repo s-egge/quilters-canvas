@@ -2,7 +2,7 @@ import '@mantine/core/styles.css'
 import { MantineProvider, createTheme, MantineColorsTuple } from '@mantine/core'
 import Toolbar from './components/toolbar/Toolbar'
 import GridCanvas from './components/canvas/GridCanvas'
-import ConstructionModal from './components/modals/ConstructionModal'
+import Modals from './components/modals/Modals'
 import './App.css'
 
 const paleBlue: MantineColorsTuple = [
@@ -34,8 +34,8 @@ function App() {
   return (
     <MantineProvider theme={theme}>
       <Toolbar />
+      <Modals />
       <GridCanvas />
-      <ConstructionModal />
     </MantineProvider>
   )
 }

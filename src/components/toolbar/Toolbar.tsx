@@ -5,19 +5,10 @@ import { useEffect } from 'react'
 import { useAppSelector, useAppDispatch } from '../../store/hooks'
 import { setTool } from '../../store/toolbarSlice'
 import { Stack, Text, Tooltip, UnstyledButton, rem } from '@mantine/core'
-import {
-  Icon,
-  IconEraser,
-  IconTrash,
-  IconPencil,
-  IconPalette,
-  IconGrid4x4,
-  IconDeviceFloppy,
-  IconUpload,
-  IconQuestionMark,
-} from '@tabler/icons-react'
+import { Icon, IconQuestionMark } from '@tabler/icons-react'
 import ColorSchemeButton from '../ui/ColorSchemeButton'
 import classes from './Toolbar.module.css'
+import { toolbarItems } from './Tools'
 
 function ToolbarLink({
   icon: Icon,
@@ -43,26 +34,6 @@ function ToolbarLink({
     </Tooltip>
   )
 }
-
-const toolbarItems = [
-  { icon: IconPencil, label: 'Draw (d)', id: 'draw', key: 'd' },
-  { icon: IconEraser, label: 'Erase (e)', id: 'erase', key: 'e' },
-  { icon: IconPalette, label: 'Palette (p)', id: 'palette', key: 'p' },
-  {
-    icon: IconGrid4x4,
-    label: 'Grid Settings (g)',
-    id: 'gridSettings',
-    key: 'g',
-  },
-  {
-    icon: IconDeviceFloppy,
-    label: 'Save Pattern (s)',
-    id: 'savePattern',
-    key: 's',
-  },
-  { icon: IconUpload, label: 'Load Pattern (l)', id: 'loadPattern', key: 'l' },
-  { icon: IconTrash, label: 'Clear (c)', id: 'clearAll', key: 'c' },
-]
 
 export default function Toolbar() {
   const dispatch = useAppDispatch()
@@ -96,13 +67,13 @@ export default function Toolbar() {
       </Text>
 
       <Stack justify="flex-start" gap={0} className={classes.toolbarMain}>
-        {toolbarItems.map((item, index) => (
+        {toolbarItems.map((tool, index) => (
           <ToolbarLink
             key={index}
-            icon={item.icon}
-            label={item.label}
-            active={toolbarState[item.id as keyof typeof toolbarState]}
-            onClick={() => dispatch(setTool(item.id))}
+            icon={tool.icon}
+            label={tool.label}
+            active={toolbarState[tool.id as keyof typeof toolbarState]}
+            onClick={() => dispatch(tool.onClick(tool.id))}
           />
         ))}
       </Stack>

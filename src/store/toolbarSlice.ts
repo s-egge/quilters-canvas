@@ -42,9 +42,13 @@ const toolbarSlice = createSlice({
       setAllToFalse(state)
       state[action.payload as keyof ToolbarState] = true
     },
+    toggleTool(state, action: PayloadAction<string>) {
+      state[action.payload as keyof ToolbarState] =
+        !state[action.payload as keyof ToolbarState]
+    },
   },
 })
 
 export default toolbarSlice.reducer
-export const { setTool } = toolbarSlice.actions
+export const { setTool, toggleTool } = toolbarSlice.actions
 export const selectToolbar = (state: RootState) => state.toolbar
