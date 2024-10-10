@@ -1,5 +1,5 @@
 import UnderConstruction from './UnderConstruction'
-import Palette from './Palette'
+import Palette from './palette/Palette'
 
 export default function Modals() {
   return (

@@ -1,10 +1,14 @@
-import { useAppSelector, useAppDispatch } from '../../store/hooks'
-import { toggleTool } from '../../store/toolbarSlice'
+import { useAppSelector, useAppDispatch } from '../../../store/hooks.ts'
+import SavedSwatches from './SavedSwatches'
+import CurrentColor from './CurrentColor'
+import AddPaletteColor from './AddPaletteColor'
+import { toggleTool } from '../../../store/toolbarSlice.ts'
 import { Modal, Accordion, Text } from '@mantine/core'
 
 export default function Palette() {
   const dispatch = useAppDispatch()
   const paletteOn = useAppSelector((state) => state.toolbar.palette)
+  const palette = useAppSelector((state) => state.palette)
 
   console.log('paletteOn: ', paletteOn)
 
@@ -17,19 +21,22 @@ export default function Palette() {
       title="Pattern Palette"
       centered
     >
-      <Accordion defaultValue="Saved Fills">
-        <Accordion.Item key="saved-fills" value="Saved Fills">
-          <Accordion.Control>Saved Fills</Accordion.Control>
+      <CurrentColor currentSwatch={palette.currentSwatch} />
+
+      <Accordion defaultValue="Saved Swatches">
+        <Accordion.Item key="saved-swatchess" value="Saved Swatches">
+          <Accordion.Control>Saved Swatches</Accordion.Control>
           <Accordion.Panel>
-            <Text c="green">
-              TODO: Previously used colors/fills will go here
-            </Text>
+            <SavedSwatches
+              savedSwatches={palette.savedSwatches}
+              currentSwatch={palette.currentSwatch}
+            />
           </Accordion.Panel>
         </Accordion.Item>
-        <Accordion.Item key="add-fill-color" value="Add Fill Color">
+        <Accordion.Item key="add-swatch-color" value="Add Swatch Color">
           <Accordion.Control>Add Solid Color</Accordion.Control>
           <Accordion.Panel>
-            <Text c="green">TODO: Add a hex/rgb color</Text>
+            <AddPaletteColor currentColor={palette.currentSwatch.color} />
           </Accordion.Panel>
         </Accordion.Item>
         <Accordion.Item key="add-url-image" value="Add URL Image">

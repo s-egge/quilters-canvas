@@ -4,7 +4,8 @@ import { useAppSelector } from '../../store/hooks'
 
 export default function GridCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const toolbarState = useAppSelector((state) => state.toolbar)
+  const toolbar = useAppSelector((state) => state.toolbar)
+  const palette = useAppSelector((state) => state.palette)
 
   // set canvas size to css size to prevent blurry canvas
   useEffect(() => {
@@ -27,10 +28,10 @@ export default function GridCanvas() {
     const y = e.clientY - rect.top
     const side = canvas.width / 6
 
-    if (toolbarState.draw) {
-      ctx.fillStyle = 'black'
+    if (toolbar.draw) {
+      ctx.fillStyle = palette.currentSwatch.color || '#000000'
       ctx.fillRect(x - side / 2, y - side / 2, side, side)
-    } else if (toolbarState.erase) {
+    } else if (toolbar.erase) {
       ctx.clearRect(x - side / 2, y - side / 2, side, side)
     }
   }

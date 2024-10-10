@@ -1,0 +1,29 @@
+/*  current color */
+.currentColor {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: rem(30px);
+  border-radius: 5px;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+}
+
+/*  saved swatches */
+.swatchContainer {
+  width: 50px;
+  aspect-ratio: 1;
+  margin: 5px;
+  border-radius: 50%;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
