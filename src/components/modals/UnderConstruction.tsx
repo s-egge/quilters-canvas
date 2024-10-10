@@ -2,7 +2,7 @@ import { Modal, Button, Text, Title, Divider, Space } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 
 export default function UnderConstruction() {
-  const [opened, { open, close }] = useDisclosure(true)
+  const [opened, { close }] = useDisclosure(true)
 
   return (
     <Modal
