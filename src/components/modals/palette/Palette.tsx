@@ -1,9 +1,11 @@
-import { useAppSelector, useAppDispatch } from '../../../store/hooks.ts'
+import { useAppSelector, useAppDispatch } from '@app/store/hooks.ts'
 import SavedSwatches from './SavedSwatches'
 import CurrentColor from './CurrentColor'
 import AddPaletteColor from './AddPaletteColor'
-import { toggleTool } from '../../../store/toolbarSlice.ts'
-import { Modal, Accordion, Text } from '@mantine/core'
+import AddUrlImage from './AddUrlImage'
+import UploadImage from './UploadImage'
+import { toggleTool } from '@app/store/toolbarSlice.ts'
+import { Modal, Accordion } from '@mantine/core'
 
 export default function Palette() {
   const dispatch = useAppDispatch()
@@ -42,13 +44,13 @@ export default function Palette() {
         <Accordion.Item key="add-url-image" value="Add URL Image">
           <Accordion.Control>Add Image From URL</Accordion.Control>
           <Accordion.Panel>
-            <Text c="green">TODO: Add an image via URL</Text>
+            <AddUrlImage />
           </Accordion.Panel>
         </Accordion.Item>
         <Accordion.Item key="upload-image" value="Upload Image">
           <Accordion.Control>Upload Image</Accordion.Control>
           <Accordion.Panel>
-            <Text c="green">TODO: Add an image from computer</Text>
+            <UploadImage />
           </Accordion.Panel>
         </Accordion.Item>
       </Accordion>

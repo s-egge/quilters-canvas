@@ -26,4 +26,45 @@
   &:hover {
     transform: scale(1.1);
   }
+
+  .uploadImgSampleCloseButton {
+    visibility: visible;
+  }
+
+  .uploadImgSampleCloseButton:hover {
+    background-color: transparent;
+  }
+}
+
+/* add image from url */
+.addImageUrlPlaceholder {
+  width: 100%;
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  border: 1px solid
+    light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-2));
+  border-radius: 5px;
+
+  p {
+    text-align: center;
+    color: grey;
+  }
+}
+
+/* upload image */
+.dropzone {
+  border: 2px dashed var(--mantine-color-dimmed);
+  border-radius: var(--mantine-radius-md);
+  cursor: pointer;
+
+  :hover {
+    background-color: light-dark(
+      var(--mantine-color-gray-1),
+      var(--mantine-color-dark-6)
+    );
+    border-radius: var(--mantine-radius-md);
+  }
 }

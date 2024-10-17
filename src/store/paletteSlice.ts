@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from './store'
-import type { Swatch } from '../utils/interfaces'
+import type { Swatch } from '@app/utils/interfaces'
 
 interface PaletteState {
   currentSwatch: Swatch
