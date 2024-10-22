@@ -1,18 +1,16 @@
-import { useAppSelector, useAppDispatch } from '@app/store/hooks.ts'
+import { useAppSelector, useAppDispatch } from '@store/hooks.ts'
 import SavedSwatches from './SavedSwatches'
 import CurrentColor from './CurrentColor'
 import AddPaletteColor from './AddPaletteColor'
 import AddUrlImage from './AddUrlImage'
 import UploadImage from './UploadImage'
-import { toggleTool } from '@app/store/toolbarSlice.ts'
+import { toggleTool } from '@store/toolbarSlice.ts'
 import { Modal, Accordion } from '@mantine/core'
 
 export default function Palette() {
   const dispatch = useAppDispatch()
   const paletteOn = useAppSelector((state) => state.toolbar.palette)
   const palette = useAppSelector((state) => state.palette)
-
-  console.log('paletteOn: ', paletteOn)
 
   if (!paletteOn) return null
 

@@ -1,6 +1,6 @@
-import { useAppDispatch } from '../../../store/hooks.ts'
+import { useAppDispatch } from '@store/hooks.ts'
 import { useState } from 'react'
-import { setSwatch } from '../../../store/paletteSlice.ts'
+import { setSwatch } from '@store/paletteSlice.ts'
 import { Button, Group, Stack, ColorPicker, ColorInput } from '@mantine/core'
 
 export default function AddPaletteColor({

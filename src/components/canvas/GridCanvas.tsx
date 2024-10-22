@@ -1,11 +1,14 @@
 import classes from './GridCanvas.module.css'
 import { useRef, useEffect } from 'react'
-import { useAppSelector } from '@app/store/hooks'
+import { useAppSelector } from '@store/hooks'
+import { drawShape } from '@utils/drawTools'
+import { GridShape } from '@utils/interfaces'
 
 export default function GridCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const toolbar = useAppSelector((state) => state.toolbar)
   const palette = useAppSelector((state) => state.palette)
+  const settings = useAppSelector((state) => state.canvas)
 
   // set canvas size to css size to prevent blurry canvas
   useEffect(() => {
@@ -24,26 +27,31 @@ export default function GridCanvas() {
     if (!ctx || !canvas) return
 
     const rect = canvasRef.current.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-    const side = canvas.width / 6
+    let x = e.clientX - rect.left
+    let y = e.clientY - rect.top
+    const side = canvas.width / 10
+
+    // adjust square x/y to center
+    if (settings.gridShape === GridShape.Square) {
+      x -= side / 2
+      y -= side / 2
+    }
 
     if (toolbar.draw) {
-      if (
-        palette.currentSwatch.type === 'color' &&
-        palette.currentSwatch.color
-      ) {
-        ctx.fillStyle = palette.currentSwatch.color
-        ctx.fillRect(x - side / 2, y - side / 2, side, side)
-      } else if (
-        (palette.currentSwatch.type === 'url' ||
-          palette.currentSwatch.type === 'image') &&
-        palette.currentSwatch.url
-      ) {
+      if (palette.currentSwatch.color) {
+        drawShape(
+          ctx,
+          settings.gridShape,
+          x,
+          y,
+          side,
+          palette.currentSwatch.color,
+        )
+      } else if (palette.currentSwatch.url) {
         const img = new Image()
         img.src = palette.currentSwatch.url
         img.onload = () => {
-          ctx.drawImage(img, x - side / 2, y - side / 2, side, side)
+          drawShape(ctx, settings.gridShape, x, y, side, '#000', img)
         }
       }
     } else if (toolbar.erase) {

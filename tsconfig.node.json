@@ -16,13 +16,7 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-
-    /* Absolute imports */
-    "baseUrl": "./src",
-    "paths": {
-      "@app/*": ["*"]
-    }
+    "noFallthroughCasesInSwitch": true
   },
-  "include": ["vite.config.ts", "src/**/*.ts"]
+  "include": ["vite.config.ts"]
 }

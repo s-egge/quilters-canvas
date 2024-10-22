@@ -1,5 +1,5 @@
 import classes from './Palette.module.css'
-import type { Swatch } from '../../../utils/interfaces.ts'
+import type { Swatch } from '@utils/interfaces.ts'
 
 export default function CurrentColor({
   currentSwatch,

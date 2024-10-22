@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
 import toolbarReducer from './toolbarSlice'
 import paletteReducer from './paletteSlice'
+import canvasReducer from './canvasSlice'
 
 const store = configureStore({
   reducer: {
     toolbar: toolbarReducer,
     palette: paletteReducer,
+    canvas: canvasReducer,
   },
 })
 

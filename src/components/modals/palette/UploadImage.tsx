@@ -1,7 +1,7 @@
 import classes from './Palette.module.css'
-import { useAppDispatch } from '@app/store/hooks'
+import { useAppDispatch } from '@store/hooks'
 import { useState } from 'react'
-import { setSwatch } from '@app/store/paletteSlice'
+import { setSwatch } from '@store/paletteSlice'
 import { IconUpload, IconPhoto, IconX, IconXboxX } from '@tabler/icons-react'
 import {
   ScrollArea,

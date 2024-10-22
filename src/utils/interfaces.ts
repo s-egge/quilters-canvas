@@ -5,4 +5,10 @@ interface Swatch {
   scale?: number
 }
 
+enum GridShape {
+  Hexagon = 'hexagon',
+  Square = 'square',
+}
+
 export type { Swatch }
+export { GridShape }

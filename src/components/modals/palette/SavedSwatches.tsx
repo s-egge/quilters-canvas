@@ -1,7 +1,7 @@
 import classes from './Palette.module.css'
-import { useAppDispatch } from '../../../store/hooks.ts'
-import type { Swatch } from '../../../utils/interfaces.ts'
-import { setSwatch, removeSwatch } from '../../../store/paletteSlice.ts'
+import { useAppDispatch } from '@store/hooks.ts'
+import type { Swatch } from '@utils/interfaces.ts'
+import { setSwatch, removeSwatch } from '@store/paletteSlice.ts'
 import {
   Button,
   Group,
