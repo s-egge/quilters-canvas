@@ -1,0 +1,50 @@
+.canvasContainer {
+  position: relative;
+  padding: 25px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: light-dark(
+    var(--mantine-color-gray-1),
+    var(--mantine-color-dark-6)
+  );
+}
+
+/* A little hacky, but the canvases are nested in a div inside the mantine viewport so this makes sure they
+   expand to the full h/w on smaller grid sizes */
+.viewport {
+  div {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.canvas {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  background-color: light-dark(
+    var(--mantine-color-white),
+    var(--mantine-color-dark-2)
+  );
+}
+
+.canvasGrid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  pointer-events: none;
+}

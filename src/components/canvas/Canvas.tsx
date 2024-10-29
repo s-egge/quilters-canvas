@@ -1,0 +1,83 @@
+import classes from './Canvas.module.css'
+import { useRef, useEffect, useState } from 'react'
+import GridCanvas from './GridCanvas'
+import { useAppSelector } from '@store/hooks'
+import { fillClosestShape, clearClosestShape } from '@utils/drawTools'
+import { resizeCanvas } from '@utils/canvasTools'
+import { ScrollArea } from '@mantine/core'
+
+export default function Canvas() {
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const toolbar = useAppSelector((state) => state.toolbar)
+  const palette = useAppSelector((state) => state.palette)
+  const settings = useAppSelector((state) => state.canvas)
+  const [img, setImg] = useState<HTMLImageElement | undefined>(undefined)
+
+  // load image if needed when swatch changes
+  useEffect(() => {
+    if (palette.currentSwatch.url) {
+      const img = new Image()
+      img.src = palette.currentSwatch.url
+      img.onload = () => {
+        setImg(img)
+      }
+    } else {
+      setImg(undefined)
+    }
+  }, [palette.currentSwatch.url])
+
+  // resize canvas when settings change
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    resizeCanvas(canvas, settings.height, settings.width)
+  }, [settings.height, settings.width])
+
+  const handleMouseClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current
+    const ctx = canvas?.getContext('2d')
+    if (!ctx || !canvas) return
+
+    const rect = canvasRef.current.getBoundingClientRect()
+    let x = e.clientX - rect.left
+    let y = e.clientY - rect.top
+
+    if (toolbar.draw) {
+      fillClosestShape(
+        ctx,
+        settings.shapes,
+        settings.gridShape,
+        settings.shapeSize,
+        x,
+        y,
+        palette.currentSwatch,
+        img,
+      )
+    } else if (toolbar.erase) {
+      clearClosestShape(
+        ctx,
+        settings.shapes,
+        settings.gridShape,
+        settings.shapeSize,
+        x,
+        y,
+      )
+    }
+  }
+
+  return (
+    <ScrollArea
+      classNames={{
+        root: classes.canvasContainer,
+        viewport: classes.viewport,
+      }}
+    >
+      <GridCanvas />
+      <canvas
+        ref={canvasRef}
+        className={classes.canvas}
+        onClick={handleMouseClick}
+      />
+    </ScrollArea>
+  )
+}

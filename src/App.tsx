@@ -1,7 +1,7 @@
 import '@mantine/core/styles.css'
 import { MantineProvider, createTheme, MantineColorsTuple } from '@mantine/core'
 import Toolbar from './components/toolbar/Toolbar'
-import GridCanvas from './components/canvas/GridCanvas'
+import Canvas from './components/canvas/Canvas'
 import Modals from './components/modals/Modals'
 import './App.css'
 
@@ -35,7 +35,7 @@ function App() {
     <MantineProvider theme={theme}>
       <Toolbar />
       <Modals />
-      <GridCanvas />
+      <Canvas />
     </MantineProvider>
   )
 }

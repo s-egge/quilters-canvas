@@ -10,5 +10,14 @@ enum GridShape {
   Square = 'square',
 }
 
-export type { Swatch }
+interface Shape {
+  type: GridShape.Hexagon | GridShape.Square
+  x: number
+  y: number
+  gridX: number
+  gridY: number
+  fill?: Swatch
+}
+
+export type { Swatch, Shape }
 export { GridShape }
