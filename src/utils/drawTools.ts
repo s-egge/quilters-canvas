@@ -50,6 +50,7 @@ function drawSquare(
   c.fillRect(x, y, r, r)
 }
 
+/* commenting out for now to avoid build error, but may need it later
 function drawShape(
   c: CanvasRenderingContext2D,
   shape: GridShape,
@@ -65,6 +66,7 @@ function drawShape(
     drawSquare(c, x, y, r, swatch, img)
   }
 }
+  */
 
 export function fillClosestShape(
   c: CanvasRenderingContext2D,
