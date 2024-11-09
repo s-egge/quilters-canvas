@@ -14,7 +14,7 @@ interface CanvasState {
 
 const initialState: CanvasState = {
   shapes: [],
-  gridShape: GridShape.Square,
+  gridShape: GridShape.Hexagon,
   shapeSize: 50,
   height: 200,
   width: 200,
@@ -34,10 +34,7 @@ export const canvasSlice = createSlice({
     },
     updateShape(state, action: PayloadAction<Shape>) {
       const newShape = action.payload
-      const index = state.shapes.findIndex(
-        (shape) =>
-          shape.gridX === newShape.gridX && shape.gridY === newShape.gridY,
-      )
+      const index = newShape.gridY * state.gridWidth + newShape.gridX
       state.shapes[index] = newShape
     },
     setShapeSize: (state, action: PayloadAction<number>) => {

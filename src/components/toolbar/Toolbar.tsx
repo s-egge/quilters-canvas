@@ -63,7 +63,7 @@ export default function Toolbar() {
   return (
     <div className={classes.toolbarContainer}>
       <Text ta="center" fw={700} size="xl">
-        QDA
+        QC
       </Text>
 
       <Stack justify="flex-start" gap={0} className={classes.toolbarMain}>

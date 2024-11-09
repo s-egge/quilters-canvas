@@ -1,5 +1,5 @@
 import { GridShape, Shape, Swatch } from './interfaces'
-import { findClosestSquare } from './mathTools'
+import { findClosestSquare, findClosestHexagon } from './mathTools'
 
 // Hexagon math sourced from https://eperezcosano.github.io/hex-grid/
 function drawHexagon(
@@ -72,6 +72,7 @@ export function fillClosestShape(
   c: CanvasRenderingContext2D,
   shapes: Shape[],
   shape: GridShape,
+  gridWidth: number,
   shapeSize: number,
   x: number,
   y: number,
@@ -81,12 +82,9 @@ export function fillClosestShape(
   let closestShape = null
 
   if (shape == GridShape.Square) {
-    closestShape = findClosestSquare(x, y, shapeSize, shapes)
+    closestShape = findClosestSquare(x, y, gridWidth, shapeSize, shapes)
 
     if (closestShape) {
-      console.log(
-        'Drawing square in ' + closestShape.gridX + ', ' + closestShape.gridY,
-      )
       drawSquare(c, closestShape.x, closestShape.y, shapeSize, swatch, img)
       return {
         type: closestShape.type,
@@ -98,8 +96,18 @@ export function fillClosestShape(
       }
     }
   } else if (shape == GridShape.Hexagon) {
-    // TODO: implement hexagon math
-    drawHexagon(c, x, y, shapeSize, swatch, img)
+    closestShape = findClosestHexagon(x, y, gridWidth, shapeSize, shapes)
+    if (closestShape) {
+      drawHexagon(c, closestShape.x, closestShape.y, shapeSize, swatch, img)
+      return {
+        type: closestShape.type,
+        x: closestShape.x,
+        y: closestShape.y,
+        gridX: closestShape.gridX,
+        gridY: closestShape.gridY,
+        fill: swatch,
+      }
+    }
   }
 }
 
@@ -113,10 +121,38 @@ function clearSquare(
   c.clearRect(x, y, r, r)
 }
 
+function clearHexagon(
+  c: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  r: number,
+) {
+  // save state of canvas
+  c.save()
+
+  // clear the hexagon
+  c.beginPath()
+  for (let i = 0; i < 6; i++) {
+    const angle = (Math.PI / 3) * i
+    c.lineTo(x + r * Math.cos(angle), y + r * Math.sin(angle))
+  }
+  c.closePath()
+
+  //set clipping region to hexagon
+  c.clip()
+
+  // clear the hexagon
+  c.clearRect(x - r, y - r, 2 * r, 2 * r)
+
+  // restore state of canvas
+  c.restore()
+}
+
 export function clearClosestShape(
   c: CanvasRenderingContext2D,
   shapes: Shape[],
   shape: GridShape,
+  gridWidth: number,
   shapeSize: number,
   x: number,
   y: number,
@@ -124,9 +160,9 @@ export function clearClosestShape(
   let closestShape = null
 
   if (shape == GridShape.Square) {
-    closestShape = findClosestSquare(x, y, shapeSize, shapes)
+    closestShape = findClosestSquare(x, y, gridWidth, shapeSize, shapes)
 
-    if (closestShape) {
+    if (closestShape && closestShape.fill) {
       clearSquare(c, closestShape.x, closestShape.y, shapeSize)
       return {
         type: closestShape.type,
@@ -138,7 +174,18 @@ export function clearClosestShape(
       }
     }
   } else if (shape == GridShape.Hexagon) {
-    // TODO: implement hexagon math
-    clearSquare(c, x, y, shapeSize)
+    closestShape = findClosestHexagon(x, y, gridWidth, shapeSize, shapes)
+
+    if (closestShape && closestShape.fill) {
+      clearHexagon(c, closestShape.x, closestShape.y, shapeSize)
+      return {
+        type: closestShape.type,
+        x: closestShape.x,
+        y: closestShape.y,
+        gridX: closestShape.gridX,
+        gridY: closestShape.gridY,
+        fill: undefined,
+      }
+    }
   }
 }

@@ -1,12 +1,14 @@
 import classes from './Canvas.module.css'
 import { useRef, useEffect, useState } from 'react'
 import GridCanvas from './GridCanvas'
-import { useAppSelector } from '@store/hooks'
+import { useAppSelector, useAppDispatch } from '@store/hooks'
 import { fillClosestShape, clearClosestShape } from '@utils/drawTools'
 import { resizeCanvas } from '@utils/canvasTools'
 import { ScrollArea } from '@mantine/core'
+import { updateShape } from '@store/canvasSlice'
 
 export default function Canvas() {
+  const dispatch = useAppDispatch()
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const toolbar = useAppSelector((state) => state.toolbar)
   const palette = useAppSelector((state) => state.palette)
@@ -42,11 +44,14 @@ export default function Canvas() {
     let x = e.clientX - rect.left
     let y = e.clientY - rect.top
 
+    let shape
+
     if (toolbar.draw) {
-      fillClosestShape(
+      shape = fillClosestShape(
         ctx,
         settings.shapes,
         settings.gridShape,
+        settings.gridWidth,
         settings.shapeSize,
         x,
         y,
@@ -54,15 +59,18 @@ export default function Canvas() {
         img,
       )
     } else if (toolbar.erase) {
-      clearClosestShape(
+      shape = clearClosestShape(
         ctx,
         settings.shapes,
         settings.gridShape,
+        settings.gridWidth,
         settings.shapeSize,
         x,
         y,
       )
     }
+
+    if (shape) dispatch(updateShape(shape))
   }
 
   return (
