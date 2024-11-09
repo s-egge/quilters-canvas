@@ -64,11 +64,16 @@ export default function GridCanvas() {
     dispatch(setHeight(height))
     dispatch(setWidth(width))
 
-    const newShapes = drawShapeGrid(canvas, gridShape, shapeSize, '#000000')
+    const newShapes = drawShapeGrid(
+      canvas,
+      gridShape,
+      shapeSize,
+      settings.gridColor,
+    )
     dispatch(setShapes(newShapes))
   }
 
-  //
+  // resize canvas when grid shape or size changes
   useEffect(() => {
     const canvas = canvasGridRef.current
     const ctx = canvas?.getContext('2d')
@@ -84,6 +89,20 @@ export default function GridCanvas() {
       settings.gridWidth,
     )
   }, [settings.gridHeight, settings.gridWidth, settings.gridShape])
+
+  // redraw grid when grid color changes
+  useEffect(() => {
+    const canvas = canvasGridRef.current
+    const ctx = canvas?.getContext('2d')
+    if (!ctx || !canvas) return
+
+    drawShapeGrid(
+      canvas,
+      settings.gridShape,
+      settings.shapeSize,
+      settings.gridColor,
+    )
+  }, [settings.gridColor])
 
   // set up grid and shapes on initial render
   useEffect(() => {
@@ -102,5 +121,11 @@ export default function GridCanvas() {
     )
   }, [])
 
-  return <canvas ref={canvasGridRef} className={classes.canvasGrid} />
+  return (
+    <canvas
+      style={{ visibility: settings.gridVisible ? 'visible' : 'hidden' }}
+      ref={canvasGridRef}
+      className={classes.canvasGrid}
+    />
+  )
 }

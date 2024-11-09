@@ -10,6 +10,8 @@ interface CanvasState {
   width: number
   gridHeight: number
   gridWidth: number
+  gridColor: string
+  gridVisible: boolean
 }
 
 const initialState: CanvasState = {
@@ -20,6 +22,8 @@ const initialState: CanvasState = {
   width: 200,
   gridHeight: 4,
   gridWidth: 5,
+  gridColor: '#000000',
+  gridVisible: true,
 }
 
 export const canvasSlice = createSlice({
@@ -52,6 +56,12 @@ export const canvasSlice = createSlice({
     setGridWidth: (state, action: PayloadAction<number>) => {
       state.gridWidth = action.payload
     },
+    setGridVisible: (state, action: PayloadAction<boolean>) => {
+      state.gridVisible = action.payload
+    },
+    setGridColor: (state, action: PayloadAction<string>) => {
+      state.gridColor = action.payload
+    },
   },
 })
 
@@ -65,5 +75,7 @@ export const {
   setWidth,
   setGridHeight,
   setGridWidth,
+  setGridVisible,
+  setGridColor,
 } = canvasSlice.actions
 export const selectCanvas = (state: RootState) => state.canvas

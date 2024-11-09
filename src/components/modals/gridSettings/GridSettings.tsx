@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '@store/hooks'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import {
   Modal,
   Button,
@@ -9,11 +9,21 @@ import {
   Space,
   SimpleGrid,
   NumberInput,
+  ColorInput,
+  ColorPicker,
+  Checkbox,
+  Group,
 } from '@mantine/core'
 import { IconHexagon, IconSquare } from '@tabler/icons-react'
 import { toggleTool } from '@store/toolbarSlice'
 import { GridShape } from '@utils/interfaces'
-import { setGridShape, setGridHeight, setGridWidth } from '@store/canvasSlice'
+import {
+  setGridShape,
+  setGridHeight,
+  setGridWidth,
+  setGridVisible,
+  setGridColor,
+} from '@store/canvasSlice'
 
 export default function GridSettings() {
   const dispatch = useAppDispatch()
@@ -24,6 +34,12 @@ export default function GridSettings() {
   const [height, setHeight] = useState(canvasSettings.gridHeight)
   const [width, setWidth] = useState(canvasSettings.gridWidth)
   const [gridResetWarning, setGridResetWarning] = useState(false)
+  const originalVisibility = useRef<boolean>(canvasSettings.gridVisible)
+  const [gridVisibleChecked, setGridVisibleChecked] = useState(
+    canvasSettings.gridVisible,
+  )
+  const originalColor = useRef<string>(canvasSettings.gridColor)
+  const [color, setColor] = useState<string>(originalColor.current)
 
   // give a warning if shape/height/width change
   useEffect(() => {
@@ -38,8 +54,6 @@ export default function GridSettings() {
     }
   }, [shape, height, width])
 
-  if (!modalOpen) return null
-
   function handleSave() {
     dispatch(setGridShape(shape))
     dispatch(setGridHeight(height))
@@ -50,15 +64,45 @@ export default function GridSettings() {
 
   function onClose() {
     dispatch(toggleTool('gridSettings'))
+    setColor(originalColor.current)
+    setGridVisibleChecked(originalVisibility.current)
     setShape(canvasSettings.gridShape)
     setHeight(canvasSettings.gridHeight)
     setWidth(canvasSettings.gridWidth)
     setGridResetWarning(false)
   }
 
+  // grid color/visibility changes happen immediately
+  useEffect(() => {
+    dispatch(setGridColor(color))
+    dispatch(setGridVisible(gridVisibleChecked))
+  }, [color, gridVisibleChecked])
+
+  if (!modalOpen) return null
+
   return (
     <Modal title="Grid Settings" opened={modalOpen} onClose={onClose}>
       <Divider mb="sm" />
+      <Text>Grid Visibility</Text>
+      <Space h="sm" />
+      <Checkbox
+        label="Show Grid"
+        checked={gridVisibleChecked}
+        onChange={(event) => setGridVisibleChecked(event.currentTarget.checked)}
+      />
+      <Space h="sm" />
+      <Divider />
+      <Space h="sm" />
+
+      <Group justify="space-between">
+        <Text>Grid Color</Text>
+        <ColorInput withPicker={false} value={color} onChange={setColor} />
+      </Group>
+      <Space h="sm" />
+      <ColorPicker fullWidth value={color} onChange={setColor} />
+      <Space h="sm" />
+      <Divider />
+      <Space h="sm" />
       <Text>Grid Shape</Text>
       <Space h="sm" />
       <SegmentedControl
