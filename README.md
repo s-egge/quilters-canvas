@@ -1,4 +1,4 @@
-# Quilt Design App
+# Quilters Canvas
 
 A work in progress web application for planning out a gridded quilt design before you cut into your fabric.
 
