@@ -2,6 +2,7 @@ import classes from './Palette.module.css'
 import { useAppDispatch } from '@store/hooks.ts'
 import type { Swatch } from '@utils/interfaces.ts'
 import { setSwatch, removeSwatch } from '@store/paletteSlice.ts'
+import { toggleTool } from '@store/toolbarSlice.ts'
 import {
   Button,
   Group,
@@ -10,6 +11,9 @@ import {
   ScrollArea,
   Indicator,
 } from '@mantine/core'
+
+const EDIT_MODAL = 'editSwatch'
+const PALLETTE_MODAL = 'palette'
 
 function SwatchSample({
   swatch,
@@ -55,6 +59,11 @@ export default function SavedSwatches({
 }) {
   const dispatch = useAppDispatch()
 
+  const handleEditSwatch = () => {
+    dispatch(toggleTool(EDIT_MODAL))
+    dispatch(toggleTool(PALLETTE_MODAL))
+  }
+
   return (
     <Stack>
       <ScrollArea mb="sm" h={200}>
@@ -82,7 +91,7 @@ export default function SavedSwatches({
           disabled={
             savedSwatches.length === 0 || currentSwatch.type === 'color'
           }
-          onClick={() => alert('Not implemented yet')}
+          onClick={handleEditSwatch}
         >
           Edit Pattern
         </Button>

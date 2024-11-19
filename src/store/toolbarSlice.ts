@@ -5,6 +5,7 @@ interface ToolbarState {
   draw: boolean
   erase: boolean
   palette: boolean
+  editSwatch: boolean // not in toolbar but nested in palette modal
   gridSettings: boolean
   savePattern: boolean
   loadPattern: boolean
@@ -16,6 +17,7 @@ const initialState: ToolbarState = {
   draw: true,
   erase: false,
   palette: false,
+  editSwatch: false,
   gridSettings: false,
   savePattern: false,
   loadPattern: false,
@@ -27,6 +29,7 @@ const setAllToFalse = (state: ToolbarState) => {
   state.draw = false
   state.erase = false
   state.palette = false
+  state.editSwatch = false
   state.gridSettings = false
   state.savePattern = false
   state.loadPattern = false

@@ -5,19 +5,29 @@ import type { Swatch } from '@utils/interfaces'
 interface PaletteState {
   currentSwatch: Swatch
   savedSwatches: Swatch[]
+  swatchScaleChange: boolean
 }
 
 const imgSwatch1: Swatch = {
   type: 'url',
   url: 'https://www.joann.com/dw/image/v2/AAMM_PRD/on/demandware.static/-/Sites-joann-product-catalog/default/dw528b46d0/images/hi-res/20/20034286.jpg?sw=556&sh=680&sm=fit',
+  scale: 1,
 }
 
 const imgSwatch2: Swatch = {
   type: 'url',
   url: 'https://www.joann.com/dw/image/v2/AAMM_PRD/on/demandware.static/-/Sites-joann-product-catalog/default/dwe956e04c/images/hi-res/19/19470871.jpg?sw=556&sh=680&sm=fit',
+  scale: 1,
+}
+
+const imgSwatch3: Swatch = {
+  type: 'url',
+  url: 'https://www.joann.com/dw/image/v2/AAMM_PRD/on/demandware.static/-/Sites-joann-product-catalog/default/dw939dd85f/images/hi-res/19/19401314.jpg?sw=480&q=60',
+  scale: 1,
 }
 
 const testSwatchesArray: Swatch[] = [
+  imgSwatch3,
   { type: 'color', color: '#000000' }, // Black
   { type: 'color', color: '#ff0000' }, // Red
   imgSwatch1,
@@ -47,8 +57,9 @@ const testSwatchesArray: Swatch[] = [
 ]
 
 const initialState: PaletteState = {
-  currentSwatch: { type: 'color', color: '#000000' },
+  currentSwatch: imgSwatch3,
   savedSwatches: testSwatchesArray,
+  swatchScaleChange: false,
 }
 
 const deleteSwatch = (state: PaletteState, swatchToDelete: Swatch) => {
@@ -65,10 +76,15 @@ const paletteSlice = createSlice({
   initialState,
   reducers: {
     setSwatch(state, action: PayloadAction<Swatch>) {
-      state.currentSwatch = action.payload
+      // add default scale if needed for new swatches
+      const newSwatch = {
+        ...action.payload,
+        scale: action.payload.scale ? action.payload.scale : 1,
+      }
+      state.currentSwatch = newSwatch
       // move to front of palette
       deleteSwatch(state, action.payload)
-      state.savedSwatches.unshift(action.payload)
+      state.savedSwatches.unshift(newSwatch)
     },
     removeSwatch(state, action: PayloadAction<Swatch>) {
       deleteSwatch(state, action.payload)
@@ -80,9 +96,14 @@ const paletteSlice = createSlice({
         state.savedSwatches.push(state.currentSwatch)
       }
     },
+    // when the scale changes, the canvas may need to redraw all instances of the image
+    toggleSwatchScaleChange(state, action: PayloadAction<boolean>) {
+      state.swatchScaleChange = action.payload
+    },
   },
 })
 
 export default paletteSlice.reducer
-export const { setSwatch, removeSwatch } = paletteSlice.actions
+export const { setSwatch, removeSwatch, toggleSwatchScaleChange } =
+  paletteSlice.actions
 export const selectPalette = (state: RootState) => state.palette

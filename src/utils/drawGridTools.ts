@@ -143,3 +143,18 @@ export function drawShapeGrid(
   }
   return drawHexGrid(canvas, size, color)
 }
+
+export function drawShapeOutline(
+  c: CanvasRenderingContext2D,
+  shape: string,
+  x: number,
+  y: number,
+  shapeSize: number,
+  color: string,
+) {
+  if (shape === GridShape.Square) {
+    c.strokeRect(x, y, shapeSize, shapeSize)
+  } else {
+    drawHexagonOutline(c, x, y, shapeSize, color)
+  }
+}

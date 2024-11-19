@@ -13,20 +13,6 @@ export default function Canvas() {
   const toolbar = useAppSelector((state) => state.toolbar)
   const palette = useAppSelector((state) => state.palette)
   const settings = useAppSelector((state) => state.canvas)
-  const [img, setImg] = useState<HTMLImageElement | undefined>(undefined)
-
-  // load image if needed when swatch changes
-  useEffect(() => {
-    if (palette.currentSwatch.url) {
-      const img = new Image()
-      img.src = palette.currentSwatch.url
-      img.onload = () => {
-        setImg(img)
-      }
-    } else {
-      setImg(undefined)
-    }
-  }, [palette.currentSwatch.url])
 
   // resize canvas when settings change
   useEffect(() => {
@@ -56,7 +42,6 @@ export default function Canvas() {
         x,
         y,
         palette.currentSwatch,
-        img,
       )
     } else if (toolbar.erase) {
       shape = clearClosestShape(
