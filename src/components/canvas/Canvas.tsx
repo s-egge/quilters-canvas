@@ -1,5 +1,5 @@
 import classes from './Canvas.module.css'
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect } from 'react'
 import GridCanvas from './GridCanvas'
 import { useAppSelector, useAppDispatch } from '@store/hooks'
 import { fillClosestShape, clearClosestShape } from '@utils/drawTools'
