@@ -20,8 +20,8 @@ const initialState: CanvasState = {
   shapeSize: 50,
   height: 200,
   width: 200,
-  gridHeight: 4,
-  gridWidth: 5,
+  gridHeight: 6,
+  gridWidth: 8,
   gridColor: '#000000',
   gridVisible: true,
 }

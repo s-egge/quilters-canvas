@@ -66,10 +66,9 @@ function drawHexagon(
   c.save()
   c.beginPath()
 
-  const a = (2 * Math.PI) / 6
-
   for (var i = 0; i < 6; i++) {
-    c.lineTo(x + r * Math.cos(a * i), y + r * Math.sin(a * i))
+    const a = (Math.PI / 3) * i
+    c.lineTo(x + r * Math.cos(a), y + r * Math.sin(a))
   }
   c.closePath()
 
@@ -84,7 +83,6 @@ function drawHexagon(
 
     // load image if not provided
     if (!img) {
-      console.log('Loading image')
       const img = new Image()
 
       img.onload = () => {
@@ -99,13 +97,10 @@ function drawHexagon(
 
       img.src = swatch.url
     } else {
-      console.log('Image already loaded, drawing')
       fillHexagonWithImage(c, x, y, r, img, swatch.scale)
       c.restore()
     }
   }
-
-  c.fill()
 }
 
 function fillSquareWithImage(
