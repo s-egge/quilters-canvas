@@ -12,6 +12,7 @@ interface CanvasState {
   gridWidth: number
   gridColor: string
   gridVisible: boolean
+  clearCanvas: boolean
 }
 
 const initialState: CanvasState = {
@@ -24,6 +25,7 @@ const initialState: CanvasState = {
   gridWidth: 8,
   gridColor: '#000000',
   gridVisible: true,
+  clearCanvas: false,
 }
 
 export const canvasSlice = createSlice({
@@ -62,6 +64,15 @@ export const canvasSlice = createSlice({
     setGridColor: (state, action: PayloadAction<string>) => {
       state.gridColor = action.payload
     },
+    setClearCanvas: (state, action: PayloadAction<boolean>) => {
+      // clear all fills if clearing canvas
+      if (action.payload) {
+        for (const shape of state.shapes) {
+          shape.fill = undefined
+        }
+      }
+      state.clearCanvas = action.payload
+    },
   },
 })
 
@@ -77,5 +88,6 @@ export const {
   setGridWidth,
   setGridVisible,
   setGridColor,
+  setClearCanvas,
 } = canvasSlice.actions
 export const selectCanvas = (state: RootState) => state.canvas

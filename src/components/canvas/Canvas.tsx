@@ -2,15 +2,17 @@ import classes from './Canvas.module.css'
 import { useRef, useEffect, useState } from 'react'
 import GridCanvas from './GridCanvas'
 import { useAppSelector, useAppDispatch } from '@store/hooks'
+import { Shape } from '@utils/interfaces'
 import {
   fillClosestShape,
   clearClosestShape,
   drawShape,
 } from '@utils/drawTools'
+import { findClosestShape } from '@utils/mathTools'
 import { shapeContainsSwatch } from '@utils/miscTools'
 import { resizeCanvas } from '@utils/canvasTools'
 import { ScrollArea } from '@mantine/core'
-import { updateShape } from '@store/canvasSlice'
+import { updateShape, setClearCanvas } from '@store/canvasSlice'
 import { toggleSwatchScaleChange } from '@store/paletteSlice'
 
 export default function Canvas() {
@@ -19,7 +21,25 @@ export default function Canvas() {
   const toolbar = useAppSelector((state) => state.toolbar)
   const palette = useAppSelector((state) => state.palette)
   const settings = useAppSelector((state) => state.canvas)
+  const [mouseDown, setMouseDown] = useState(false)
   const [img, setImg] = useState<HTMLImageElement | undefined>(undefined)
+  const [lastFilledShape, setlastFilledShape] = useState<Shape | null>(null)
+
+  const clearCanvas = () => {
+    const canvas = canvasRef.current
+    const c = canvas?.getContext('2d')
+    if (!c || !canvas) {
+      console.error('Error: Could not get canvas while clearing')
+      return
+    }
+    c.clearRect(0, 0, canvas.width, canvas.height)
+    dispatch(setClearCanvas(false))
+  }
+
+  // clear canvas
+  useEffect(() => {
+    clearCanvas()
+  }, [settings.clearCanvas])
 
   // load image when swatch changes to improve performance
   useEffect(() => {
@@ -114,6 +134,65 @@ export default function Canvas() {
     if (shape) dispatch(updateShape(shape))
   }
 
+  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!mouseDown) return
+    const canvas = canvasRef.current
+    const c = canvas?.getContext('2d') as CanvasRenderingContext2D
+
+    if (!c || !canvas) {
+      console.error('Error: Could not get canvas')
+      return
+    }
+
+    const rect = canvas.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+
+    let shape = findClosestShape(
+      x,
+      y,
+      settings.gridShape,
+      settings.gridWidth,
+      settings.shapeSize,
+      settings.shapes,
+    )
+
+    // fill or erase if moused over a new shape
+    if (
+      shape &&
+      (shape.x !== lastFilledShape?.x || shape.y !== lastFilledShape?.y)
+    ) {
+      if (toolbar.draw) {
+        shape = fillClosestShape(
+          c,
+          settings.shapes,
+          settings.gridShape,
+          settings.gridWidth,
+          settings.shapeSize,
+          x,
+          y,
+          palette.currentSwatch,
+          img,
+        )
+      } else if (toolbar.erase) {
+        shape = clearClosestShape(
+          c,
+          settings.shapes,
+          settings.gridShape,
+          settings.gridWidth,
+          settings.shapeSize,
+          x,
+          y,
+        )
+      }
+
+      if (shape) {
+        setlastFilledShape(shape)
+        dispatch(updateShape(shape))
+      }
+    }
+  }
+
   return (
     <ScrollArea
       classNames={{
@@ -126,6 +205,9 @@ export default function Canvas() {
         ref={canvasRef}
         className={classes.canvas}
         onClick={handleMouseClick}
+        onMouseMove={handleMouseMove}
+        onMouseDown={() => setMouseDown(true)}
+        onMouseUp={() => setMouseDown(false)}
       />
     </ScrollArea>
   )

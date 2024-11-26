@@ -138,3 +138,18 @@ export function findClosestHexagon(
     }
   }
 }
+
+export function findClosestShape(
+  x: number,
+  y: number,
+  gridShape: GridShape,
+  gridWidth: number,
+  shapeSize: number,
+  shapes: Shape[],
+): Shape | undefined {
+  if (gridShape === GridShape.Square) {
+    return findClosestSquare(x, y, gridWidth, shapeSize, shapes)
+  }
+
+  return findClosestHexagon(x, y, gridWidth, shapeSize, shapes)
+}

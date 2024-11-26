@@ -2,6 +2,7 @@ import UnderConstruction from './UnderConstruction'
 import Palette from './palette/Palette'
 import GridSettings from './gridSettings/GridSettings'
 import EditSwatchModal from './editSwatch/EditSwatchModal'
+import ClearCanvas from './ClearCanvas'
 
 export default function Modals() {
   return (
@@ -10,6 +11,7 @@ export default function Modals() {
       <Palette />
       <EditSwatchModal />
       <GridSettings />
+      <ClearCanvas />
     </>
   )
 }
