@@ -2,6 +2,7 @@ import classes from './Canvas.module.css'
 import { useRef, useEffect } from 'react'
 import { useAppSelector, useAppDispatch } from '@store/hooks'
 import { getMinimumShapeSize } from '@utils/mathTools'
+import { resizeShapesArray } from '@utils/miscTools'
 import { drawShapeGrid } from '@utils/drawGridTools'
 import { resizeCanvas } from '@utils/canvasTools'
 import {
@@ -9,6 +10,7 @@ import {
   setWidth,
   setShapeSize,
   setShapes,
+  setLoadPattern,
 } from '@store/canvasSlice'
 import { GridShape } from '@utils/interfaces'
 
@@ -64,13 +66,20 @@ export default function GridCanvas() {
     dispatch(setHeight(height))
     dispatch(setWidth(width))
 
-    const newShapes = drawShapeGrid(
+    let newShapes = drawShapeGrid(
       canvas,
       gridShape,
       shapeSize,
       settings.gridColor,
     )
-    dispatch(setShapes(newShapes))
+
+    if (newShapes) {
+      newShapes = resizeShapesArray(settings.shapes, newShapes)
+      dispatch(setShapes(newShapes))
+      dispatch(setLoadPattern(true))
+    } else {
+      console.error('Error: Could not draw shape grid')
+    }
   }
 
   // resize canvas when grid shape or size changes

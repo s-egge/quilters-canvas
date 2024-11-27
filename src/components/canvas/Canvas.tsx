@@ -11,9 +11,47 @@ import {
 import { findClosestShape } from '@utils/mathTools'
 import { shapeContainsSwatch } from '@utils/miscTools'
 import { resizeCanvas } from '@utils/canvasTools'
-import { ScrollArea } from '@mantine/core'
-import { updateShape, setClearCanvas } from '@store/canvasSlice'
+import { ScrollArea, Loader } from '@mantine/core'
+import { updateShape, setClearCanvas, setLoadPattern } from '@store/canvasSlice'
 import { toggleSwatchScaleChange } from '@store/paletteSlice'
+
+async function drawPatternShapesOnCanvas(
+  canvas: HTMLCanvasElement,
+  shapes: Shape[],
+  shapeSize: number,
+) {
+  const c = canvas.getContext('2d')
+
+  if (!c) {
+    console.error('Could not get canvas context')
+    return
+  }
+
+  for (const shape of shapes) {
+    if (shape.fill) {
+      const img = new Image()
+      img.src = shape.fill.url as string
+
+      await new Promise<void>((resolve, reject) => {
+        img.onload = () => {
+          if (shape.fill) {
+            drawShape(
+              c,
+              shape.type,
+              shape.x,
+              shape.y,
+              shapeSize,
+              shape.fill,
+              img,
+            )
+          }
+          resolve()
+        }
+        img.onerror = reject
+      })
+    }
+  }
+}
 
 export default function Canvas() {
   const dispatch = useAppDispatch()
@@ -24,6 +62,7 @@ export default function Canvas() {
   const [mouseDown, setMouseDown] = useState(false)
   const [img, setImg] = useState<HTMLImageElement | undefined>(undefined)
   const [lastFilledShape, setlastFilledShape] = useState<Shape | null>(null)
+  const [loading, setLoading] = useState<boolean>(false)
 
   const clearCanvas = () => {
     const canvas = canvasRef.current
@@ -35,6 +74,28 @@ export default function Canvas() {
     c.clearRect(0, 0, canvas.width, canvas.height)
     dispatch(setClearCanvas(false))
   }
+
+  // load new pattern onto canvas
+  useEffect(() => {
+    if (!settings.loadPattern) return
+    const canvas = canvasRef.current
+    if (!canvas) {
+      console.error('Error: Could not get canvas while loading pattern')
+      return
+    }
+
+    const drawData = async () => {
+      setLoading(true)
+      await drawPatternShapesOnCanvas(
+        canvas,
+        settings.shapes,
+        settings.shapeSize,
+      )
+      setLoading(false)
+      dispatch(setLoadPattern(false))
+    }
+    drawData().catch(console.error)
+  }, [settings.loadPattern, settings.shapes])
 
   // clear canvas
   useEffect(() => {
@@ -209,6 +270,26 @@ export default function Canvas() {
         onMouseDown={() => setMouseDown(true)}
         onMouseUp={() => setMouseDown(false)}
       />
+      {loading && (
+        <Loader
+          id="loader"
+          style={{
+            position: 'absolute',
+            top: canvasRef.current
+              ? `${canvasRef.current.clientHeight / 4}px`
+              : '0',
+            left: canvasRef.current
+              ? `${canvasRef.current.clientWidth / 4}px`
+              : '0',
+            zIndex: 100,
+          }}
+          size={
+            canvasRef.current?.clientWidth
+              ? canvasRef.current.clientWidth / 2
+              : window.innerWidth / 4
+          }
+        />
+      )}
     </ScrollArea>
   )
 }
