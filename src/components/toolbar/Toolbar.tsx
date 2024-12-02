@@ -43,6 +43,14 @@ export default function Toolbar() {
   // TODO: add shortcut for help button when implemented
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
+      // disable shortcuts when typing in input or textarea
+      if (
+        ['input', 'textarea'].includes(
+          (event.target as HTMLElement).tagName.toLowerCase(),
+        )
+      )
+        return
+
       const key = event.key.toLowerCase()
       const keyID = toolbarItems.find((item) => item.key === key)?.id
 

@@ -1,22 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from './store'
-import { GridShape, Shape } from '@utils/interfaces'
-
-interface CanvasState {
-  shapes: Shape[]
-  gridShape: GridShape
-  shapeSize: number
-  height: number
-  width: number
-  gridHeight: number
-  gridWidth: number
-  gridColor: string
-  gridVisible: boolean
-  clearCanvas: boolean
-  loadPattern: boolean
-}
+import { GridShape, Shape, CanvasState } from '@utils/interfaces'
 
 const initialState: CanvasState = {
+  title: '',
+  description: '',
   shapes: [],
   gridShape: GridShape.Hexagon,
   shapeSize: 50,
@@ -78,6 +66,10 @@ export const canvasSlice = createSlice({
     setLoadPattern: (state, action: PayloadAction<boolean>) => {
       state.loadPattern = action.payload
     },
+    loadCanvas: (state, action: PayloadAction<CanvasState>) => {
+      Object.assign(state, action.payload)
+      state.loadPattern = true
+    },
   },
 })
 
@@ -95,5 +87,6 @@ export const {
   setGridColor,
   setClearCanvas,
   setLoadPattern,
+  loadCanvas,
 } = canvasSlice.actions
 export const selectCanvas = (state: RootState) => state.canvas

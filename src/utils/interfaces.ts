@@ -19,5 +19,27 @@ interface Shape {
   fill?: Swatch
 }
 
-export type { Swatch, Shape }
+interface PaletteState {
+  currentSwatch: Swatch
+  savedSwatches: Swatch[]
+  swatchScaleChange: boolean
+}
+
+interface CanvasState {
+  title: string
+  description: string
+  shapes: Shape[]
+  gridShape: GridShape
+  shapeSize: number
+  height: number
+  width: number
+  gridHeight: number
+  gridWidth: number
+  gridColor: string
+  gridVisible: boolean
+  clearCanvas: boolean
+  loadPattern: boolean
+}
+
+export type { Swatch, Shape, PaletteState, CanvasState }
 export { GridShape }

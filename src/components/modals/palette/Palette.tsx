@@ -18,7 +18,7 @@ export default function Palette() {
     <Modal
       opened={paletteOn}
       onClose={() => dispatch(toggleTool('palette'))}
-      title="Pattern Palette"
+      title="Swatch Palette"
       centered
     >
       <CurrentColor currentSwatch={palette.currentSwatch} />

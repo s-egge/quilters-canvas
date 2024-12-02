@@ -1,12 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from './store'
-import type { Swatch } from '@utils/interfaces'
-
-interface PaletteState {
-  currentSwatch: Swatch
-  savedSwatches: Swatch[]
-  swatchScaleChange: boolean
-}
+import type { Swatch, PaletteState } from '@utils/interfaces'
 
 const imgSwatch1: Swatch = {
   type: 'url',
@@ -100,10 +94,15 @@ const paletteSlice = createSlice({
     toggleSwatchScaleChange(state, action: PayloadAction<boolean>) {
       state.swatchScaleChange = action.payload
     },
+    loadPalette(state, action: PayloadAction<PaletteState>) {
+      state.savedSwatches = action.payload.savedSwatches
+      state.currentSwatch = action.payload.currentSwatch
+      state.swatchScaleChange = false
+    },
   },
 })
 
 export default paletteSlice.reducer
-export const { setSwatch, removeSwatch, toggleSwatchScaleChange } =
+export const { setSwatch, removeSwatch, toggleSwatchScaleChange, loadPalette } =
   paletteSlice.actions
 export const selectPalette = (state: RootState) => state.palette

@@ -15,6 +15,13 @@ export default function ColorSchemeButton() {
   // keyboard shortcut to toggle color scheme
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
+      // disable shortcuts when typing in input or textarea
+      if (
+        ['input', 'textarea'].includes(
+          (event.target as HTMLElement).tagName.toLowerCase(),
+        )
+      )
+        return
       if (event.key === 'm' || event.key === 'M') {
         setColorScheme(colorScheme === 'dark' ? 'light' : 'dark')
       }

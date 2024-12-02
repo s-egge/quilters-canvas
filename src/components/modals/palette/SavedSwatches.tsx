@@ -85,7 +85,7 @@ export default function SavedSwatches({
           disabled={savedSwatches.length === 0}
           onClick={() => dispatch(removeSwatch(currentSwatch))}
         >
-          Delete Pattern
+          Delete Swatch
         </Button>
         <Button
           disabled={
@@ -93,7 +93,7 @@ export default function SavedSwatches({
           }
           onClick={handleEditSwatch}
         >
-          Edit Pattern
+          Edit Swatch
         </Button>
       </Group>
     </Stack>
