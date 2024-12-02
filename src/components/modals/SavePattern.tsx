@@ -44,9 +44,6 @@ export default function SavePattern() {
     it's easy to reach the browser limit. Could potentially assign each palette swatch a 
     number/id when saving, and save that number in the canvas shapes instead of the url
 
-    TODO: catch limit reached error when saving to browser and alert user they need to save
-    to device instead
-
     TODO: make an interface for saved patterns to get rid of the any type
   */
   function handleSaveToBrowser(num: number) {
@@ -63,10 +60,26 @@ export default function SavePattern() {
       },
     }
 
-    localStorage.setItem(
-      `quiltersCanvasPattern${num}`,
-      JSON.stringify(patternData),
-    )
+    try {
+      localStorage.setItem(
+        `quiltersCanvasPattern${num}`,
+        JSON.stringify(patternData),
+      )
+    } catch (err) {
+      // check if error is quota exceeded error
+      if (err instanceof DOMException && err.name === 'QuotaExceededError') {
+        console.log('Quota exceeded error')
+        alert(
+          'This pattern is too large to save in your browser, you can delete other patterns and try again or save to your device instead.',
+        )
+        return
+      }
+      // case of some other error
+      console.error(err)
+      alert(
+        'There was an error saving your pattern. Please try saving to your device instead.',
+      )
+    }
 
     const updatedPatterns = [...savedPatterns]
     updatedPatterns[num - 1] = patternData
