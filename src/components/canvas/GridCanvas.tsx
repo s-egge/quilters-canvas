@@ -14,7 +14,13 @@ import {
 } from '@store/canvasSlice'
 import { GridShape } from '@utils/interfaces'
 
-export default function GridCanvas() {
+export default function GridCanvas({
+  maxHeight,
+  maxWidth,
+}: {
+  maxHeight?: number
+  maxWidth?: number
+}) {
   const dispatch = useAppDispatch()
   const canvasGridRef = useRef<HTMLCanvasElement>(null)
   const settings = useAppSelector((state) => state.canvas)
@@ -24,10 +30,13 @@ export default function GridCanvas() {
     gridShape: GridShape,
     gridHeight: number,
     gridWidth: number,
+    initialRender: boolean = false,
   ) {
-    // first reset the canvas to take up as much space as it can
-    canvas.style.width = '95%'
-    canvas.style.height = '95%'
+    // first reset the canvas to take up as much space as it can based on max height and width if available
+    canvas.style.height = maxHeight ? `${maxHeight}px` : '95%'
+    canvas.style.width = maxWidth ? `${maxWidth}px` : '95%'
+    canvas.width = canvas.clientWidth
+    canvas.height = canvas.clientHeight
 
     const shapeSize = getMinimumShapeSize(
       gridShape,
@@ -76,17 +85,33 @@ export default function GridCanvas() {
     if (newShapes) {
       newShapes = resizeShapesArray(settings.shapes, newShapes)
       dispatch(setShapes(newShapes))
-      dispatch(setLoadPattern(true))
+      if (!initialRender) dispatch(setLoadPattern(true))
     } else {
       console.error('Error: Could not draw shape grid')
     }
   }
 
-  // resize canvas when grid shape or size changes
+  // handle loading an existing pattern
   useEffect(() => {
     const canvas = canvasGridRef.current
     const ctx = canvas?.getContext('2d')
     if (!ctx || !canvas) return
+
+    resizeCanvas(canvas, settings.height, settings.width)
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    drawShapeGrid(
+      canvas,
+      settings.gridShape,
+      settings.shapeSize,
+      settings.gridColor,
+    )
+  }, [settings.loadPattern])
+
+  // resize canvas when grid shape or size changes
+  useEffect(() => {
+    const canvas = canvasGridRef.current
+    const ctx = canvas?.getContext('2d')
+    if (!ctx || !canvas || settings.loadPattern) return
 
     canvas.width = canvas.clientWidth
     canvas.height = canvas.clientHeight
@@ -127,6 +152,7 @@ export default function GridCanvas() {
       settings.gridShape,
       settings.gridHeight,
       settings.gridWidth,
+      true,
     )
   }, [])
 

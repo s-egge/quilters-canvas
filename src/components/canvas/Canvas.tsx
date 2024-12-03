@@ -29,6 +29,11 @@ async function drawPatternShapesOnCanvas(
 
   for (const shape of shapes) {
     if (shape.fill) {
+      if (shape.fill.type === 'color') {
+        drawShape(c, shape.type, shape.x, shape.y, shapeSize, shape.fill)
+
+        continue
+      }
       const img = new Image()
       img.src = shape.fill.url as string
 
@@ -55,6 +60,7 @@ async function drawPatternShapesOnCanvas(
 
 export default function Canvas() {
   const dispatch = useAppDispatch()
+  const containerRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const toolbar = useAppSelector((state) => state.toolbar)
   const palette = useAppSelector((state) => state.palette)
@@ -63,6 +69,18 @@ export default function Canvas() {
   const [img, setImg] = useState<HTMLImageElement | undefined>(undefined)
   const [lastFilledShape, setlastFilledShape] = useState<Shape | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
+  const [maxWidth, setMaxWidth] = useState<number>(100)
+  const [maxHeight, setMaxHeight] = useState<number>(100)
+
+  // update max height and width when screen size changes
+  useEffect(() => {
+    const updateMaxDimensions = () => {
+      setMaxWidth(window.innerWidth)
+      setMaxHeight(window.innerHeight)
+    }
+    window.addEventListener('resize', updateMaxDimensions)
+    return () => window.removeEventListener('resize', updateMaxDimensions)
+  }, [])
 
   const clearCanvas = () => {
     const canvas = canvasRef.current
@@ -95,7 +113,7 @@ export default function Canvas() {
       dispatch(setLoadPattern(false))
     }
     drawData().catch(console.error)
-  }, [settings.loadPattern, settings.shapes])
+  }, [settings.loadPattern, settings.shapes, settings.shapeSize])
 
   // clear canvas
   useEffect(() => {
@@ -158,6 +176,7 @@ export default function Canvas() {
   }, [palette.swatchScaleChange])
 
   const handleMouseClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (e.button === 1 || e.button === 2) return
     const canvas = canvasRef.current
     const ctx = canvas?.getContext('2d')
     if (!ctx || !canvas) return
@@ -254,20 +273,32 @@ export default function Canvas() {
     }
   }
 
+  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (e.button === 1 || e.button === 2) {
+      setMouseDown(true)
+    }
+  }
+
   return (
     <ScrollArea
+      ref={containerRef}
+      scrollbarSize={20}
+      type="always"
       classNames={{
         root: classes.canvasContainer,
         viewport: classes.viewport,
       }}
     >
-      <GridCanvas />
+      <GridCanvas
+        maxHeight={containerRef.current?.clientHeight}
+        maxWidth={containerRef.current?.clientWidth}
+      />
       <canvas
         ref={canvasRef}
         className={classes.canvas}
         onClick={handleMouseClick}
         onMouseMove={handleMouseMove}
-        onMouseDown={() => setMouseDown(true)}
+        onMouseDown={handleMouseDown}
         onMouseUp={() => setMouseDown(false)}
       />
       {loading && (
@@ -275,18 +306,14 @@ export default function Canvas() {
           id="loader"
           style={{
             position: 'absolute',
-            top: canvasRef.current
-              ? `${canvasRef.current.clientHeight / 4}px`
-              : '0',
-            left: canvasRef.current
-              ? `${canvasRef.current.clientWidth / 4}px`
-              : '0',
+            top: `${window.innerHeight / 4}px`,
+            left: `${window.innerWidth / 4}px`,
             zIndex: 100,
           }}
           size={
-            canvasRef.current?.clientWidth
-              ? canvasRef.current.clientWidth / 2
-              : window.innerWidth / 4
+            (window.innerWidth < window.innerHeight
+              ? window.innerWidth
+              : window.innerHeight) / 2
           }
         />
       )}

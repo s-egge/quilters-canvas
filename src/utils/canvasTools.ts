@@ -3,7 +3,12 @@ export function resizeCanvas(
   height: number,
   width: number,
 ) {
-  const scale = 3
+  let scale = 1
+  if (height < 3000 && width < 3000) {
+    scale = 2
+  } else if (height < 1500 && width < 1500) {
+    scale = 3
+  }
 
   height = Math.floor(height)
   width = Math.floor(width)

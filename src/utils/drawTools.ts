@@ -167,7 +167,6 @@ function drawSquare(
   else if ((swatch.type === 'url' || swatch.type === 'image') && swatch.url) {
     // load image if not provided
     if (!img) {
-      console.log('Loading image')
       const img = new Image()
       img.onload = () => {
         fillSquareWithImage(c, x, y, length, img, swatch.scale)
@@ -180,7 +179,6 @@ function drawSquare(
       }
       img.src = swatch.url
     } else {
-      console.log('Image already loaded, drawing')
       fillSquareWithImage(c, x, y, length, img, swatch.scale)
       c.restore()
     }
