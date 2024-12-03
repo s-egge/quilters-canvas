@@ -69,18 +69,6 @@ export default function Canvas() {
   const [img, setImg] = useState<HTMLImageElement | undefined>(undefined)
   const [lastFilledShape, setlastFilledShape] = useState<Shape | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
-  const [maxWidth, setMaxWidth] = useState<number>(100)
-  const [maxHeight, setMaxHeight] = useState<number>(100)
-
-  // update max height and width when screen size changes
-  useEffect(() => {
-    const updateMaxDimensions = () => {
-      setMaxWidth(window.innerWidth)
-      setMaxHeight(window.innerHeight)
-    }
-    window.addEventListener('resize', updateMaxDimensions)
-    return () => window.removeEventListener('resize', updateMaxDimensions)
-  }, [])
 
   const clearCanvas = () => {
     const canvas = canvasRef.current
