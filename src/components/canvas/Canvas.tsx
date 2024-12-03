@@ -262,9 +262,8 @@ export default function Canvas() {
   }
 
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (e.button === 1 || e.button === 2) {
-      setMouseDown(true)
-    }
+    if (e.button === 1) return
+    setMouseDown(true)
   }
 
   return (
