@@ -6,6 +6,7 @@ import {
   IconDeviceFloppy,
   IconUpload,
   IconTrash,
+  IconZoom,
 } from '@tabler/icons-react'
 
 import { setTool, toggleTool } from '../../store/toolbarSlice'
@@ -38,6 +39,13 @@ export const toolbarItems = [
     onClick: toggleTool,
     id: 'gridSettings',
     key: 'g',
+  },
+  {
+    icon: IconZoom,
+    label: 'Zoom (z)',
+    onClick: toggleTool,
+    id: 'zoom',
+    key: 'z',
   },
   {
     icon: IconDeviceFloppy,

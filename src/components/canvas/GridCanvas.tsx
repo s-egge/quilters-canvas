@@ -17,9 +17,11 @@ import { GridShape } from '@utils/interfaces'
 export default function GridCanvas({
   maxHeight,
   maxWidth,
+  zoom,
 }: {
   maxHeight?: number
   maxWidth?: number
+  zoom?: number
 }) {
   const dispatch = useAppDispatch()
   const canvasGridRef = useRef<HTMLCanvasElement>(null)
@@ -90,6 +92,14 @@ export default function GridCanvas({
       console.error('Error: Could not draw shape grid')
     }
   }
+
+  // zoom canvas
+  useEffect(() => {
+    const canvas = canvasGridRef.current
+    if (!canvas) return
+    canvas.style.transform = `scale(${zoom})`
+    canvas.style.transformOrigin = '0 0'
+  }, [zoom])
 
   // handle loading an existing pattern
   useEffect(() => {

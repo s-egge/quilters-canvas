@@ -69,6 +69,7 @@ export default function Canvas() {
   const [img, setImg] = useState<HTMLImageElement | undefined>(undefined)
   const [lastFilledShape, setlastFilledShape] = useState<Shape | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
+  const [zoom, setZoom] = useState<number>(1)
 
   const clearCanvas = () => {
     const canvas = canvasRef.current
@@ -81,6 +82,34 @@ export default function Canvas() {
     dispatch(setClearCanvas(false))
   }
 
+  // zoom canvas
+  useEffect(() => {
+    const canvas = canvasRef.current
+    const container = containerRef.current
+    if (!canvas || !container) return
+    canvas.style.transform = `scale(${zoom})`
+    canvas.style.transformOrigin = '0 0'
+
+    // target the div nested in the viewport in the containerRef and change it's height/width
+    const viewport = containerRef.current.children[0]
+      .children[0] as HTMLDivElement
+    console.log('viewport')
+    console.log(viewport)
+
+    const canvasHeight = canvas.clientHeight * zoom
+    const canvasWidth = canvas.clientWidth * zoom
+
+    // set the height and width of the viewport to the height and width of the canvas
+    if (zoom !== 1) {
+      viewport.style.display = 'none'
+      viewport.style.height = `${canvasHeight}px`
+      viewport.style.width = `${canvasWidth}px`
+      viewport.offsetHeight
+      viewport.style.display = 'flex'
+      containerRef.current.style.overflow = 'auto'
+    }
+  }, [zoom])
+
   // load new pattern onto canvas
   useEffect(() => {
     if (!settings.loadPattern) return
@@ -89,6 +118,7 @@ export default function Canvas() {
       console.error('Error: Could not get canvas while loading pattern')
       return
     }
+    setZoom(1)
 
     const drawData = async () => {
       setLoading(true)
@@ -122,6 +152,7 @@ export default function Canvas() {
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
+    setZoom(1)
     resizeCanvas(canvas, settings.height, settings.width)
   }, [settings.height, settings.width])
 
@@ -170,8 +201,8 @@ export default function Canvas() {
     if (!ctx || !canvas) return
 
     const rect = canvasRef.current.getBoundingClientRect()
-    let x = e.clientX - rect.left
-    let y = e.clientY - rect.top
+    let x = (e.clientX - rect.left) / zoom
+    let y = (e.clientY - rect.top) / zoom
 
     let shape
 
@@ -213,8 +244,8 @@ export default function Canvas() {
     }
 
     const rect = canvas.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
+    const x = (e.clientX - rect.left) / zoom
+    const y = (e.clientY - rect.top) / zoom
 
     let shape = findClosestShape(
       x,
@@ -266,6 +297,28 @@ export default function Canvas() {
     setMouseDown(true)
   }
 
+  const handleMouseWheel = (e: React.WheelEvent<HTMLCanvasElement>) => {
+    if (!canvasRef.current || !containerRef.current) return
+    if (toolbar.zoom) {
+      e.preventDefault()
+      e.stopPropagation()
+
+      const canvasWidth = canvasRef.current.clientWidth * zoom
+      const canvasHeight = canvasRef.current.clientHeight * zoom
+      const viewportWidth = containerRef.current.clientWidth
+      const viewportHeight = containerRef.current.clientHeight
+
+      if (e.deltaY < 0) {
+        if (zoom >= 2) return
+        setZoom((prevZoom) => prevZoom + 0.1)
+      } else {
+        // stop zooming when full canvas is visible
+        if (canvasWidth < viewportWidth && canvasHeight < viewportHeight) return
+        setZoom((prevZoom) => prevZoom - 0.1)
+      }
+    }
+  }
+
   return (
     <ScrollArea
       ref={containerRef}
@@ -279,6 +332,7 @@ export default function Canvas() {
       <GridCanvas
         maxHeight={containerRef.current?.clientHeight}
         maxWidth={containerRef.current?.clientWidth}
+        zoom={zoom}
       />
       <canvas
         ref={canvasRef}
@@ -287,6 +341,7 @@ export default function Canvas() {
         onMouseMove={handleMouseMove}
         onMouseDown={handleMouseDown}
         onMouseUp={() => setMouseDown(false)}
+        onWheel={handleMouseWheel}
       />
       {loading && (
         <Loader

@@ -52,10 +52,10 @@ export default function Toolbar() {
         return
 
       const key = event.key.toLowerCase()
-      const keyID = toolbarItems.find((item) => item.key === key)?.id
+      const tool = toolbarItems.find((item) => item.key === key)
 
-      if (keyID) {
-        dispatch(setTool(keyID))
+      if (tool) {
+        dispatch(tool.onClick(tool.id))
       }
 
       // help button is not in toolbarItems and needs to be accounted for separately

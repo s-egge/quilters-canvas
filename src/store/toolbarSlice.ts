@@ -7,6 +7,7 @@ interface ToolbarState {
   palette: boolean
   editSwatch: boolean // not in toolbar but nested in palette modal
   gridSettings: boolean
+  zoom: boolean
   savePattern: boolean
   loadPattern: boolean
   clearAll: boolean
@@ -19,6 +20,7 @@ const initialState: ToolbarState = {
   palette: false,
   editSwatch: false,
   gridSettings: false,
+  zoom: false,
   savePattern: false,
   loadPattern: false,
   clearAll: false,
