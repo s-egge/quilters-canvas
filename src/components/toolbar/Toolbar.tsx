@@ -3,7 +3,7 @@
  */
 import { useEffect } from 'react'
 import { useAppSelector, useAppDispatch } from '../../store/hooks'
-import { setTool } from '../../store/toolbarSlice'
+import { setTool, toggleTool } from '../../store/toolbarSlice'
 import { Stack, Text, Tooltip, UnstyledButton, rem } from '@mantine/core'
 import { Icon, IconQuestionMark } from '@tabler/icons-react'
 import ColorSchemeButton from '../ui/ColorSchemeButton'
@@ -60,7 +60,7 @@ export default function Toolbar() {
 
       // help button is not in toolbarItems and needs to be accounted for separately
       else if (key == 'h') {
-        dispatch(setTool('help'))
+        dispatch(toggleTool('help'))
       }
     }
 
