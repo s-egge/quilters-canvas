@@ -3,7 +3,7 @@
  */
 import { useEffect } from 'react'
 import { useAppSelector, useAppDispatch } from '../../store/hooks'
-import { setTool, toggleTool } from '../../store/toolbarSlice'
+import { toggleTool } from '../../store/toolbarSlice'
 import { Stack, Text, Tooltip, UnstyledButton, rem } from '@mantine/core'
 import { Icon, IconQuestionMark } from '@tabler/icons-react'
 import ColorSchemeButton from '../ui/ColorSchemeButton'
