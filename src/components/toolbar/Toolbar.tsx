@@ -91,7 +91,7 @@ export default function Toolbar() {
           icon={IconQuestionMark}
           label="Help (h)"
           active={toolbarState.help}
-          onClick={() => dispatch(setTool('help'))}
+          onClick={() => dispatch(toggleTool('help'))}
         />
       </Stack>
     </div>
