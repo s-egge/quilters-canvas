@@ -15,9 +15,11 @@ export default function LoadPattern() {
   const showModal = useAppSelector((state) => state.toolbar.loadPattern)
   const [file, setFile] = useState<File | null>(null)
 
-  const savedPatterns = showModal
-    ? [getSavedPattern(1), getSavedPattern(2), getSavedPattern(3)]
-    : []
+  const [savedPatterns, setSavedPatterns] = useState([
+    getSavedPattern(1),
+    getSavedPattern(2),
+    getSavedPattern(3),
+  ])
 
   if (!showModal) return null
 
@@ -62,6 +64,13 @@ export default function LoadPattern() {
     dispatch(toggleTool('loadPattern'))
   }
 
+  function handleDeleteFromBrowser(num: number) {
+    localStorage.removeItem(`quiltersCanvasPattern${num}`)
+    const updatedPatterns = [...savedPatterns]
+    updatedPatterns[num - 1] = null
+    setSavedPatterns(updatedPatterns)
+  }
+
   return (
     <Modal
       opened={showModal}
@@ -80,7 +89,7 @@ export default function LoadPattern() {
                 pattern={pattern || {}}
                 customButtonText="Load"
                 onCustomButtonClick={() => handleLoadFromBrowser(index + 1)}
-                onDeletePattern={() => console.log('delete')}
+                onDeletePattern={() => handleDeleteFromBrowser(index + 1)}
               />
             ))}
           </Accordion.Panel>
