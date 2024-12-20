@@ -94,6 +94,18 @@ export default function Canvas() {
     dispatch(setClearCanvas(false))
   }
 
+  // set the touch action based on the zoom state, this is needed
+  // to allow the pinch gesture and dragging to work on touch screens
+  useEffect(() => {
+    const c = canvasRef.current
+    if (!c) return
+    if (toolbar.zoom) c.style.touchAction = 'none'
+    else c.style.touchAction = 'auto'
+
+    console.log('Setting touch action: ')
+    console.log(c.style.touchAction)
+  }, [toolbar.zoom])
+
   // handle zoom when touch screen pinch gesture used
   usePinch(
     ({ offset: [s] }) => {
@@ -189,8 +201,8 @@ export default function Canvas() {
       return
     }
 
+    // if no swatch, no need to update canvas
     if (!palette.currentSwatch.url) {
-      console.error('Error: No URL for current swatch')
       return
     }
 
