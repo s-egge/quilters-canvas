@@ -4,11 +4,12 @@
 import { useEffect } from 'react'
 import { useAppSelector, useAppDispatch } from '../../store/hooks'
 import { toggleTool } from '../../store/toolbarSlice'
-import { Stack, Text, Tooltip, UnstyledButton, rem } from '@mantine/core'
+import { Stack, Tooltip, UnstyledButton, rem } from '@mantine/core'
 import { Icon, IconQuestionMark } from '@tabler/icons-react'
 import ColorSchemeButton from '../ui/ColorSchemeButton'
 import classes from './Toolbar.module.css'
 import { toolbarItems } from './Tools'
+import Logo from '../../assets/logo.tsx'
 
 function ToolbarLink({
   icon: Icon,
@@ -70,10 +71,9 @@ export default function Toolbar() {
 
   return (
     <div className={classes.toolbarContainer}>
-      <Text ta="center" fw={700} size="xl">
-        QC
-      </Text>
-
+      <div className={classes.logo}>
+        <Logo color={'var(--mantine-primary-color-8)'} />
+      </div>
       <Stack justify="flex-start" gap={0} className={classes.toolbarMain}>
         {toolbarItems.map((tool, index) => (
           <ToolbarLink
