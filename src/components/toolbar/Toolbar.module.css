@@ -56,3 +56,38 @@
     }
   }
 }
+
+@media (max-width: 600px) {
+  .toolbarContainer {
+    flex-direction: row;
+    width: 100%;
+    height: rem(80px);
+    border-bottom: rem(1px) solid
+      light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+    overflow-x: auto;
+  }
+
+  .logo {
+    height: 100%;
+    width: rem(80px);
+
+    svg {
+      height: 90%;
+      width: auto;
+    }
+  }
+
+  .toolbarMain {
+    margin-top: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: rem(5px);
+  }
+
+  .toolbarUtil {
+    display: flex;
+    flex-direction: row;
+  }
+}

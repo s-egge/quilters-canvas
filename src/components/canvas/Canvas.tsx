@@ -1,5 +1,6 @@
 import classes from './Canvas.module.css'
 import { useRef, useEffect, useState } from 'react'
+import { usePinch } from '@use-gesture/react'
 import GridCanvas from './GridCanvas'
 import { useAppSelector, useAppDispatch } from '@store/hooks'
 import { Shape } from '@utils/interfaces'
@@ -71,6 +72,17 @@ export default function Canvas() {
   const [loading, setLoading] = useState<boolean>(false)
   const [zoom, setZoom] = useState<number>(1)
 
+  // warn user of possible unsaved changes before leaving page
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault()
+    }
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+    }
+  }, [])
+
   const clearCanvas = () => {
     const canvas = canvasRef.current
     const c = canvas?.getContext('2d')
@@ -81,6 +93,19 @@ export default function Canvas() {
     c.clearRect(0, 0, canvas.width, canvas.height)
     dispatch(setClearCanvas(false))
   }
+
+  // handle zoom when touch screen pinch gesture used
+  usePinch(
+    ({ offset: [s] }) => {
+      // round scale to 1 decimal place
+      const newScale = Math.round(s * 10) / 10
+      if (toolbar.zoom) setZoom(newScale)
+    },
+    {
+      target: canvasRef,
+      scaleBounds: { min: 0.5, max: 2 },
+    },
+  )
 
   // zoom canvas
   useEffect(() => {
@@ -93,8 +118,6 @@ export default function Canvas() {
     // target the div nested in the viewport in the containerRef and change it's height/width
     const viewport = containerRef.current.children[0]
       .children[0] as HTMLDivElement
-    console.log('viewport')
-    console.log(viewport)
 
     const canvasHeight = canvas.clientHeight * zoom
     const canvasWidth = canvas.clientWidth * zoom

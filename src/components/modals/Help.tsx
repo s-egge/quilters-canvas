@@ -49,7 +49,7 @@ function ToolItem({
           {shortcut}
         </Kbd>
         <Space w="sm" />
-        <Text size="sm" color="gray" style={{ marginLeft: 10 }}>
+        <Text size="sm" c="gray" style={{ marginLeft: 10 }}>
           {description}
         </Text>
       </Flex>

@@ -85,7 +85,7 @@ export default function Toolbar() {
           />
         ))}
       </Stack>
-      <Stack justify="center" gap={0}>
+      <Stack className={classes.toolbarUtil} justify="center" gap={0}>
         <ColorSchemeButton />
         <ToolbarLink
           icon={IconQuestionMark}
