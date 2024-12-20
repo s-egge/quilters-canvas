@@ -35,6 +35,7 @@
     var(--mantine-color-white),
     var(--mantine-color-dark-2)
   );
+  touch-action: none;
 }
 
 .canvasGrid {
